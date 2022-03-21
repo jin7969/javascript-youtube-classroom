@@ -1,5 +1,5 @@
 import { $, $$ } from '../util/dom.js';
-import YoutubeSearch from '../models/YoutubeSearch.js';
+import YoutubeSearch from '../models/youtubeSearch.js';
 import storage from '../storage/storage.js';
 import { VIDEO } from '../constants/constants.js';
 import { isEndOfScroll, scrollToTop } from '../util/general.js';
@@ -41,11 +41,11 @@ const searchTemplate = {
   `,
 };
 
-export default class SearchResultModal {
+export default class SearchResultScreen {
   constructor(mainScreen) {
     this.throttle = null;
     this.youtubeSearch = new YoutubeSearch();
-    this.main = mainScreen;
+    this.mainPage = mainScreen;
 
     this.modalContainer = $('.modal-container');
     this.searchModalButton = $('#search-modal-button');
@@ -124,7 +124,7 @@ export default class SearchResultModal {
     selectedButton.hidden = true;
     const videoData = this.selectedVideoData(selectedButton.closest('li'));
     storage.saveVideo(videoData);
-    this.main.renderSavedVideos(true, storage.getLocalStorage());
+    this.mainPage.renderSavedVideos(true, storage.getLocalStorage());
   }
 
   removeSkeletonUI() {
