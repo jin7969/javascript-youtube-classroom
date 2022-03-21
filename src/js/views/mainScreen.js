@@ -27,7 +27,6 @@ const savedVideoTemplate = {
 export default class MainScreen {
   constructor() {
     this.isVideoState = true;
-
     this.unseenVideoButton = $('#unseen-video-button');
     this.watchedVideoButton = $('#watched-video-button');
     this.savedVideoList = $('.saved-video-list');

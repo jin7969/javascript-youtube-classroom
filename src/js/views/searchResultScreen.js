@@ -2,7 +2,7 @@ import { $, $$ } from '../util/dom.js';
 import YoutubeSearch from '../models/youtubeSearch.js';
 import storage from '../storage/storage.js';
 import { VIDEO } from '../constants/constants.js';
-import { isEndOfScroll, scrollToTop } from '../util/general.js';
+import { isEndOfScroll, scrollToTop, throttle } from '../util/general.js';
 
 const searchTemplate = {
   skeletonUI: `
@@ -43,7 +43,6 @@ const searchTemplate = {
 
 export default class SearchResultScreen {
   constructor(mainScreen) {
-    this.throttle = null;
     this.youtubeSearch = new YoutubeSearch();
     this.mainPage = mainScreen;
 
@@ -60,7 +59,10 @@ export default class SearchResultScreen {
     this.searchInputKeyword.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') this.handleSearch();
     });
-    this.videoList.addEventListener('scroll', this.handleVideoListScroll.bind(this));
+    this.videoList.addEventListener(
+      'scroll',
+      throttle(this.handleVideoListScroll.bind(this), VIDEO.THROTTLE_DELAY)
+    );
     this.videoList.addEventListener('click', (e) => {
       const isSaveButtonClick = e.target.classList.contains('video-item__save-button');
       if (isSaveButtonClick) {
@@ -71,10 +73,6 @@ export default class SearchResultScreen {
 
   toggleModal() {
     this.modalContainer.classList.toggle('hide');
-  }
-
-  removeScrollEvent() {
-    this.videoList.removeEventListener('scroll', this.handleVideoListScroll);
   }
 
   async handleSearch() {
@@ -93,23 +91,16 @@ export default class SearchResultScreen {
     }
   }
 
-  async handleVideoListScroll(e) {
-    if (isEndOfScroll(e.target) && !this.throttle) {
+  async handleVideoListScroll() {
+    if (isEndOfScroll(this.videoList) && this.youtubeSearch.pageToken) {
       this.renderSkeletonUI();
       const response = await this.youtubeSearch.fetchYoutubeAPI();
       this.renderSearchResult(response);
-      const isLastVideos = response.items.length !== 0 && !response.nextPageToken;
-      if (isLastVideos) {
-        this.removeScrollEvent();
-      }
-      this.throttle = setTimeout(() => {
-        this.throttle = null;
-      }, VIDEO.THROTTLE_DELAY);
     }
   }
 
   selectedVideoData(videoItem) {
-    const videoData = {
+    return {
       videoId: videoItem.dataset.videoId,
       thumbnails: videoItem.querySelector('.video-item__thumbnail').src,
       title: videoItem.querySelector('.video-item__title').textContent,
@@ -117,7 +108,6 @@ export default class SearchResultScreen {
       publishTime: videoItem.querySelector('.video-item__published-date').textContent,
       unseen: true,
     };
-    return videoData;
   }
 
   handleSaveVideo(selectedButton) {
