@@ -1,14 +1,3 @@
-import { $ } from '../util/dom.js';
-
-export const ELEMENTS = {
-  UNSEEN_VIDEO_BUTTON: $('#unseen-video-button'),
-  WATCHED_VIDEO_BUTTON: $('#watched-video-button'),
-  SEARCH_INPUT_KEYWORD: $('#search-input-keyword'),
-  SEARCH_RESULT: $('.search-result'),
-  VIDEO_LIST: $('.video-list'),
-  SAVED_VIDEO_LIST: $('.saved-video-list'),
-};
-
 export const MESSAGE = {
   ERROR: {
     EMPTY_INPUT: '빈값을 입력할 수 없습니다. 다시 입력해 주세요.',
