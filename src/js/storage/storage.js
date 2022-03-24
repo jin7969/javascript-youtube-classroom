@@ -5,13 +5,13 @@ const storage = {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(video));
   },
   getLocalStorage() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? [];
   },
   updateLocalStorage(savedVideoData, videoData) {
     if (savedVideoData.length > VIDEO.MAX_SAVE_COUNT) {
       return;
     }
-    if (savedVideoData.some((video) => video.videoId === videoData.videoId)) {
+    if (this.isIncludeStorage(savedVideoData, videoData.videoId)) {
       return;
     }
     this.setLocalStorage([...savedVideoData, videoData]);
@@ -26,6 +26,9 @@ const storage = {
   },
   resetLocalStorage() {
     localStorage.clear();
+  },
+  isIncludeStorage(savedVideoData, target) {
+    return savedVideoData.some((video) => video.videoId === target);
   },
 };
 

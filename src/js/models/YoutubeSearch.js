@@ -1,12 +1,12 @@
 import { VIDEO } from '../constants/constants.js';
-import { validateInput } from '../util/general.js';
+import { isEmptyString } from '../util/general.js';
 
 export default class YoutubeSearch {
   #pageToken = '';
   #searchTarget = '';
 
   set searchTarget(searchInput) {
-    validateInput(searchInput);
+    isEmptyString(searchInput);
     this.#searchTarget = searchInput;
   }
 

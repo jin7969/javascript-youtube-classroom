@@ -7,7 +7,7 @@ export const scrollToTop = (element) => {
 export const isEndOfScroll = (element) =>
   element.scrollHeight - element.scrollTop === element.clientHeight;
 
-export const validateInput = (input) => {
+export const isEmptyString = (input) => {
   if (!input) {
     throw new Error(MESSAGE.ERROR.EMPTY_INPUT);
   }
