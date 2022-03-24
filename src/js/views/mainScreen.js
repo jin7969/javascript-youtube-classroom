@@ -79,15 +79,11 @@ export default class MainScreen {
   }
 
   handleWatchedContent() {
-    this.unseenVideoButton.classList.remove('target');
-    this.watchedVideoButton.classList.add('target');
     this.isVideoState = false;
     this.initSavedVideos();
   }
 
   handleUnseenContent() {
-    this.unseenVideoButton.classList.add('target');
-    this.watchedVideoButton.classList.remove('target');
     this.isVideoState = true;
     this.initSavedVideos();
   }
